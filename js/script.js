@@ -7,47 +7,54 @@ let assets = []; // Array to store the assets
 function createAssetElement(asset) {
   const assetElement = document.createElement('div');
   assetElement.classList.add('asset');
-  
+  assetElement.dataset.category = asset.category.toLowerCase();
+
   const imageElement = document.createElement('img');
   imageElement.src = asset.source;
   assetElement.appendChild(imageElement);
-  
+
   const titleElement = document.createElement('h2');
   titleElement.innerText = asset.title;
   assetElement.appendChild(titleElement);
-  
-  const downloadButton = document.createElement('a');
-  downloadButton.classList.add('download-button');
-  downloadButton.href = asset.downloadUrl;
-  downloadButton.innerText = 'Download';
-  assetElement.appendChild(downloadButton);
-  
+
   const likeButton = document.createElement('button');
   likeButton.classList.add('like-button');
   likeButton.innerText = 'Like';
-  likeButton.addEventListener('click', () => {
-    if (!asset.liked) {
-      asset.likes++;
-      asset.liked = true;
-      updateLikes(asset);
-    }
-  });
   assetElement.appendChild(likeButton);
-  
+
   const dislikeButton = document.createElement('button');
   dislikeButton.classList.add('dislike-button');
   dislikeButton.innerText = 'Dislike';
-  dislikeButton.addEventListener('click', () => {
-    if (!asset.disliked) {
-      asset.dislikes++;
-      asset.disliked = true;
-      updateLikes(asset);
+  assetElement.appendChild(dislikeButton);
+
+  let isLiked = false;
+  let isDisliked = false;
+
+  likeButton.addEventListener('click', () => {
+    if (!isLiked) {
+      isLiked = true;
+      likeButton.classList.add('liked');
+      dislikeButton.classList.remove('disliked');
+    } else {
+      isLiked = false;
+      likeButton.classList.remove('liked');
     }
   });
-  assetElement.appendChild(dislikeButton);
-  
+
+  dislikeButton.addEventListener('click', () => {
+    if (!isDisliked) {
+      isDisliked = true;
+      dislikeButton.classList.add('disliked');
+      likeButton.classList.remove('liked');
+    } else {
+      isDisliked = false;
+      dislikeButton.classList.remove('disliked');
+    }
+  });
+
   return assetElement;
 }
+
 
 // Function to update the like and dislike counts
 function updateLikes(asset) {
